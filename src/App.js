@@ -67,12 +67,15 @@ function List() {
   return todos.map((todo) => (
     <li key={todo.id}>
       {todo.completed ? <s>{todo.title}</s> : todo.title}
-      <CompletedButton
-        id={todo.id}
-        todo={todo}
-        todos={todos}
-        setTodos={setTodos}
-      />
+      <div className="button-container">
+        <CompletedButton
+          id={todo.id}
+          todo={todo}
+          todos={todos}
+          setTodos={setTodos}
+        />
+        <DeleteButton id={todo.id} todos={todos} setTodos={setTodos} />
+      </div>
     </li>
   ));
 }
@@ -100,4 +103,17 @@ function CompletedButton({ id, todo, todos, setTodos }) {
   return <button onClick={updateState}>완료</button>;
 }
 
+function DeleteButton({ id, todos, setTodos }) {
+  const deleteTodo = () => {
+    fetch(`http://localhost:8080/todos/${id}`, {
+      method: "DELETE",
+    })
+      .then(() => {
+        setTodos(todos.filter((todo) => todo.id !== id));
+      })
+      .catch((error) => console.error("에러 발생:", error));
+  };
+
+  return <button onClick={deleteTodo}>삭제</button>;
+}
 export default App;

@@ -94,3 +94,9 @@ li {
   text-decoration: line-through;
   color: gray;
 }
+
+.button-container {
+  display: flex;
+  gap: 10px; /* 버튼 사이의 간격 */
+  margin-left: auto;
+}
