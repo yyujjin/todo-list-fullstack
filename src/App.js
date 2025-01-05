@@ -64,6 +64,9 @@ function List() {
       .then((response) => response.json())
       .then((json) => setTodos(json));
   }, []);
+  if (todos.length === 0) {
+    return <p style={{ backgroundColor: "white" }}>"할 일을 추가하세요!</p>;
+  }
   return todos.map((todo) => (
     <li key={todo.id}>
       {todo.completed ? <s>{todo.title}</s> : todo.title}
