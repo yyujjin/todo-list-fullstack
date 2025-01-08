@@ -3,21 +3,22 @@ import "./App.css";
 import { useState, useEffect } from "react";
 
 function App() {
+  const [todos, setTodos] = useState([]);
   return (
     <>
       <h1>To-Do List</h1>
 
       <div id="todo-container">
-        <AddTodo />
+        <AddTodo setTodos={setTodos} />
         <ul id="todo-list">
-          <List />
+          <List todos={todos} setTodos={setTodos} />
         </ul>
       </div>
     </>
   );
 }
 
-function AddTodo() {
+function AddTodo({ setTodos }) {
   const [todo, setTodo] = useState("");
 
   return (
@@ -29,12 +30,15 @@ function AddTodo() {
         value={todo}
         onChange={(e) => setTodo(e.target.value)}
       ></input>
-      <AddButton todo={todo} setTodo={setTodo} />
+      <AddButton todo={todo} setTodo={setTodo} setTodos={setTodos} />
     </>
   );
 }
 
-function AddButton({ todo, setTodo }) {
+//처음에 데이터 다 가져옴
+//추가하면 완료된데이터 받아서 여기 배열에 업뎃함
+//다시 조회하지 않음
+function AddButton({ todo, setTodo, setTodos }) {
   const sendTodo = () => {
     fetch("http://localhost:8080/todos", {
       method: "POST",
@@ -44,7 +48,10 @@ function AddButton({ todo, setTodo }) {
       body: JSON.stringify({ title: todo }),
     })
       .then((res) => res.json())
-
+      //여기여기
+      .then((json) => {
+        setTodos((todos) => [...todos, json]);
+      })
       .catch((error) => console.error("에러 발생:", error));
     setTodo("");
   };
@@ -56,8 +63,7 @@ function AddButton({ todo, setTodo }) {
   );
 }
 
-function List() {
-  const [todos, setTodos] = useState([]);
+function List({ todos = { todos }, setTodos = { setTodos } }) {
   console.log(todos);
   useEffect(() => {
     fetch("http://localhost:8080/todos")
