@@ -1,18 +1,17 @@
+import axios from "axios";
+
 export default function AddButton({ todo, setTodo, setTodos }) {
   const sendTodo = () => {
-    fetch("http://localhost:8080/todos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title: todo }),
-    })
-      .then((res) => res.json())
-      //여기여기
-      .then((json) => {
-        setTodos((todos) => [...todos, json]);
+    axios
+      .post("http://localhost:8080/todos", {
+        title: todo,
       })
-      .catch((error) => console.error("에러 발생:", error));
+      .then(function (response) {
+        setTodos((todos) => [...todos, response.data]);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     setTodo("");
   };
 
